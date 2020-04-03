@@ -26,7 +26,7 @@ async function bootstrap() {
     Config.vapid.public,
     Config.vapid.private,
   );
-  await app.listen(7000, Config.backend.server);
+  await app.listen(8000, Config.backend.server);
 }
 
 bootstrap().then(() => {});
