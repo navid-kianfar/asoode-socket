@@ -9,8 +9,8 @@ import {
   PushNotificationDTO,
 } from '../dtos';
 
-const pushQueue = 'AsoodePushQueue';
-const socketQueue = 'AsoodeSocketQueue';
+const pushQueue = 'asoode-v2-push';
+const socketQueue = 'asoode-v2-socket';
 
 @Injectable()
 export class MainService {

@@ -8,9 +8,9 @@ import * as Fs from 'fs';
 // const caPath = Path.resolve(__dirname, '../ssl/chain.pem');
 // const certPath = Path.resolve(__dirname, '../ssl/cert.pem');
 // const privatePath = Path.resolve(__dirname, '../ssl/privkey.pem');
-const caPath = '/etc/letsencrypt/live/asoode.com/chain.pem';
-const certPath = '/etc/letsencrypt/live/asoode.com/cert.pem';
-const privatePath = '/etc/letsencrypt/live/asoode.com/privkey.pem';
+const caPath = '/etc/letsencrypt/live/socket.asoode.com/chain.pem';
+const certPath = '/etc/letsencrypt/live/socket.asoode.com/cert.pem';
+const privatePath = '/etc/letsencrypt/live/socket.asoode.com/privkey.pem';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, {
@@ -26,7 +26,7 @@ async function bootstrap() {
     Config.vapid.public,
     Config.vapid.private,
   );
-  await app.listen(3000, Config.backend.server);
+  await app.listen(7000, Config.backend.server);
 }
 
 bootstrap().then(() => {});

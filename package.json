@@ -1,8 +1,8 @@
 {
   "private": true,
   "name": "asoode-socket",
-  "version": "2.0.0",
-  "description": "asoode socket",
+  "version": "3.0.0",
+  "description": "asoode v2 socket",
   "main": "index.js",
   "author": {
     "name": "Navid Kianfar, https://asoode.com"
