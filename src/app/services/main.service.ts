@@ -98,13 +98,15 @@ export class MainService {
     const parsed = JSON.parse(content) as PushNotificationData;
     if (!parsed.data || !parsed.data.users.length) return;
     const model = {
-      type: parsed.data.type,
-      data: parsed.data.data,
-      push: {
+      notification: {
+        body: parsed.description,
         title: parsed.title,
-        description: parsed.description,
-        avatar: parsed.avatar,
-        url: parsed.url,
+        vibrate: [300, 100, 400, 100, 400, 100, 400],
+        requireInteraction: true,
+        icon: parsed.avatar,
+        data: { ...parsed.data.data, url: parsed.url },
+        renotify: true,
+        tag: parsed.title,
       },
     };
     this.sendPushNotification(parsed.data.users, 'push-notification', model);
