@@ -15,7 +15,7 @@ const socketQueue = 'asoode-v2-socket';
 @Injectable()
 export class MainService {
   server: any;
-  onlineUsers: StringDictionary<string[]> = new StringDictionary<string[]>();
+  onlineUsers: any = {};
 
   private sendToOne<T>(
     userId: string,
@@ -43,29 +43,31 @@ export class MainService {
     }
   }
   private sendToAll<T>(eventName: string, model: T, onlyOne: boolean = true) {
-    this.onlineUsers.Values().forEach(clients => {
-      this.sendToClients<T>(eventName, clients, model, onlyOne);
+    Object.values(this.onlineUsers).forEach(clients => {
+      this.sendToClients<T>(eventName, clients as string[], model, onlyOne);
     });
   }
   private sendToSelected<T>(users: string[], eventName: string, model: T) {
+    global.console.log('\r\n' + new Date().getTime() + '\t', (model as any).push.description);
     users.forEach(player => {
       this.sendToOne<T>(player, eventName, model);
     });
   }
   findUser(userId: string): string[] {
-    if (!this.onlineUsers.ContainsKey(userId)) {
-      this.onlineUsers.Add(userId, []);
+    if (!this.onlineUsers[userId]) {
+      this.onlineUsers[userId] = [];
     }
-    return this.onlineUsers.Item(userId);
+    return this.onlineUsers[userId];
   }
   onConnect(userId: string, clientId: string): any {
     this.findUser(userId).unshift(clientId);
   }
   onDisconnect(userId: string, clientId: string) {
-    const user = this.findUser(userId);
-    const index = user.indexOf(clientId);
-    if (index !== -1) user.splice(index, 1);
-    if (user.length === 0) this.onlineUsers.Remove(userId);
+    this.onlineUsers[userId] = this.onlineUsers[userId] || [];
+    this.onlineUsers[userId] = this.onlineUsers[userId].filter(c => c !== clientId);
+    if (this.onlineUsers[userId].length === 0) {
+      delete this.onlineUsers[userId];
+    }
   }
   bindToMessageQueue() {
     MessageQueue.connect(Config.messageQueue)
@@ -150,7 +152,7 @@ export class MainService {
         )
         .then(
           () => {
-            global.console.log('SENT');
+            global.console.log('PUSH_SENT');
           },
           err => {
             global.console.error(err);
