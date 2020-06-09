@@ -32,19 +32,30 @@ export class MainService {
     model: T,
     onlyOne: boolean = false,
   ) {
-    if (!clients.length) return;
+    if (!clients.length) {
+      global.console.log('SOCKET_EMPTY');
+      return;
+    }
     try {
       for (let i = 0; i < (onlyOne ? 1 : clients.length); i++) {
         const connection = this.server.sockets.sockets[clients[i]];
-        if (connection) connection.emit(eventName, model);
+        global.console.log('SOCKET', clients[i], connection !== undefined);
+        if (connection) {
+          connection.emit(eventName, model);
+          global.console.log('SOCKET_SENT');
+        } else {
+          global.console.log('SOCKET_NOT_FOUND');
+        }
       }
-    } catch (e) {
-      global.console.error(e);
+    }
+    catch (e) {
+      global.console.log('SOCKET_FAILED');
+      // global.console.error(e);
     }
   }
   private sendToAll<T>(eventName: string, model: T, onlyOne: boolean = true) {
-    Object.values(this.onlineUsers).forEach(clients => {
-      this.sendToClients<T>(eventName, clients as string[], model, onlyOne);
+    Object.keys(this.onlineUsers).forEach(key => {
+      this.sendToClients<T>(eventName, this.onlineUsers[key], model, onlyOne);
     });
   }
   private sendToSelected<T>(users: string[], eventName: string, model: T) {
@@ -61,6 +72,7 @@ export class MainService {
   }
   onConnect(userId: string, clientId: string): any {
     this.findUser(userId).unshift(clientId);
+    global.console.log('CONNECT', userId, clientId);
   }
   onDisconnect(userId: string, clientId: string) {
     this.onlineUsers[userId] = this.onlineUsers[userId] || [];
@@ -68,6 +80,7 @@ export class MainService {
     if (this.onlineUsers[userId].length === 0) {
       delete this.onlineUsers[userId];
     }
+    global.console.log('DISCONNECT', userId, clientId);
   }
   bindToMessageQueue() {
     MessageQueue.connect(Config.messageQueue)
@@ -155,7 +168,8 @@ export class MainService {
             global.console.log('PUSH_SENT');
           },
           err => {
-            global.console.error(err);
+            global.console.log('PUSH_FAILED');
+            // global.console.error(err);
           },
         );
     });
