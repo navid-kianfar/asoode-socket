@@ -4,13 +4,15 @@ import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app/app.module';
 import Config from './app/app.config';
 import * as Fs from 'fs';
+
 // import * as Path from 'path';
 // const caPath = Path.resolve(__dirname, '../ssl/chain.pem');
 // const certPath = Path.resolve(__dirname, '../ssl/cert.pem');
 // const privatePath = Path.resolve(__dirname, '../ssl/privkey.pem');
-const caPath = '/etc/letsencrypt/live/socket.asoode.com/chain.pem';
-const certPath = '/etc/letsencrypt/live/socket.asoode.com/cert.pem';
-const privatePath = '/etc/letsencrypt/live/socket.asoode.com/privkey.pem';
+
+const caPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/chain.pem';
+const certPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/cert.pem';
+const privatePath = '/etc/letsencrypt/live/socket.' + Config.domain + '/privkey.pem';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, {

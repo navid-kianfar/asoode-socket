@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as webPush from 'web-push';
 import * as MessageQueue from 'amqplib';
-import { StringDictionary } from '../library/dictionary';
 import Config from '../app.config';
 import {
   SocketNotificationData,
@@ -9,8 +8,8 @@ import {
   PushNotificationDTO,
 } from '../dtos';
 
-const pushQueue = 'asoode-v2-push';
-const socketQueue = 'asoode-v2-socket';
+const pushQueue = `${Config.prefix}-${Config.language}-push`;
+const socketQueue = `${Config.prefix}-${Config.language}-socket`;
 
 @Injectable()
 export class MainService {
