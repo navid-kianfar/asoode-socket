@@ -1,4 +1,5 @@
 import * as bodyParser from 'body-parser';
+import * as Cors from 'cors';
 import * as webPush from 'web-push';
 import { NestFactory } from '@nestjs/core';
 import { ApplicationModule } from './app/app.module';
@@ -23,6 +24,7 @@ async function bootstrap() {
     },
   });
   app.use(bodyParser.json());
+  app.use(Cors({credentials: true, origin: true}));
   webPush.setVapidDetails(
     Config.vapid.email,
     Config.vapid.public,
