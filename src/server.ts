@@ -11,9 +11,13 @@ import * as Fs from 'fs';
 // const certPath = Path.resolve(__dirname, '../ssl/cert.pem');
 // const privatePath = Path.resolve(__dirname, '../ssl/privkey.pem');
 
-const caPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/chain.pem';
-const certPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/cert.pem';
-const privatePath = '/etc/letsencrypt/live/socket.' + Config.domain + '/privkey.pem';
+// const caPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/chain.pem';
+// const certPath = '/etc/letsencrypt/live/socket.' + Config.domain + '/cert.pem';
+// const privatePath = '/etc/letsencrypt/live/socket.' + Config.domain + '/privkey.pem';
+
+const caPath = '/etc/letsencrypt/live/socket-' + Config.domain + '/chain.pem';
+const certPath = '/etc/letsencrypt/live/socket-' + Config.domain + '/cert.pem';
+const privatePath = '/etc/letsencrypt/live/socket-' + Config.domain + '/privkey.pem';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, {
