@@ -1,11 +1,11 @@
-import { HttpModule, Module } from '@nestjs/common';
-import { MainService } from './services/main.service';
-import { MainGateway } from './gateways/main.gateway';
+import { Module } from '@nestjs/common';
+import { QueueModule } from '../queue/queue.module';
+import { SocketModule } from '../socket/socket.module';
+import { Gateway } from './gateway';
 
 @Module({
-  imports: [HttpModule],
+  imports: [QueueModule, SocketModule],
   controllers: [],
-  providers: [MainService, MainGateway],
-  exports: [],
+  providers: [Gateway],
 })
-export class ApplicationModule {}
+export class AppModule {}
