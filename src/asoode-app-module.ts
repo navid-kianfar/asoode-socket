@@ -5,7 +5,14 @@ import { AppModule } from './app/app.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [ConfigModule.forRoot(), QueueModule, SocketModule, AppModule],
+  imports: [
+    ConfigModule.forRoot({
+      ignoreEnvFile: process.env.APP_ENV !== undefined,
+    }),
+    QueueModule,
+    SocketModule,
+    AppModule,
+  ],
   controllers: [],
   providers: [],
 })
