@@ -23,5 +23,8 @@ FROM node:18-alpine As production
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 
+RUN wget -O /bin/wait-for-it.sh https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+RUN chmod +x /bin/wait-for-it.sh
+
 EXPOSE 80
-CMD [ "node", "dist/main.js" ]
+CMD ["/bin/wait-for-it.sh", "rabbitmq:5672", "--timeout=90", "--", "node", "dist/main.js" ]
