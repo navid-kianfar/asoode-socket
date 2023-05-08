@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { HubService } from './hub.service';
 import { QueueService } from '../../queue/services/queue.service';
-import { moduleName, panelSocket } from '../../app/constants';
+import { moduleName, socketQueue } from '../../app/constants';
 import { AsoodeSocketCommand } from '../models/socket.dtos';
 import { SocketCommandType } from '../models/enums';
 import {PushNotificationData, PushNotificationDTO, SocketNotificationData} from '../models/dtos';
+
+const event = `activity`;
 
 @Injectable()
 export class MessengerService {
@@ -19,17 +21,11 @@ export class MessengerService {
 
   bind() {
     this.queueService.ready.then(() => {
-      const queueName = this.queueService.queueName(moduleName, panelSocket);
+      const queueName = this.queueService.queueName(moduleName, socketQueue);
       this.queueService.consume(
         queueName,
         (command: AsoodeSocketCommand<any>): Promise<boolean> => {
-          const handlerName = `handleCommand_${
-            SocketCommandType[command.type]
-          }`;
-          const handler = this[handlerName]
-            ? this[handlerName]
-            : this.handleCommand_defaultHandler;
-          return handler(this.hub, command);
+          return this.handleCommand_defaultHandler(this.hub, command);
         },
       );
     });
@@ -60,8 +56,6 @@ export class MessengerService {
     command: AsoodeSocketCommand<any>,
   ): Promise<boolean> {
     // NOTE: for compatibility, all the handlers should be async, even if it is not doing async operation!
-    const event = `command.${SocketCommandType[command.type]}`;
-
     global.console.info('command', event, command.userIds);
 
     // NOTE: do not use this.broadcast; "this" object inside the method becomes undefined and closure creates memory leak

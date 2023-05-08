@@ -27,9 +27,8 @@ export class QueueService implements OnApplicationShutdown {
     });
   }
 
-  queueName(moduleName: string, action: string, env: string = ''): string {
-    env = env || process.env.APP_ENV;
-    return `${moduleName}.${action}.${env}`.toLowerCase();
+  queueName(moduleName: string, action: string, lang = 'en'): string {
+    return `${moduleName}-${lang}-${action}`.toLowerCase();
   }
 
   private async assertQueue(queueName, options): Promise<void> {
