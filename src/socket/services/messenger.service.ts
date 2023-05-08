@@ -60,7 +60,8 @@ export class MessengerService {
 
     // NOTE: do not use this.broadcast; "this" object inside the method becomes undefined and closure creates memory leak
     const users = hub.findUsers(command.userIds);
-    users.forEach((user) => user.socket.emit(event, command.payload));
+    delete command.userIds;
+    users.forEach((user) => user.socket.emit(event, command));
 
     return true;
   }
