@@ -154,7 +154,7 @@ export class MainService {
         .sendNotification(
           {
             endpoint: subscription.endpoint,
-            expirationTime: subscription.expirationTime,
+            expirationTime: subscription.expirationTime ? (subscription.expirationTime instanceof Date ? subscription.expirationTime.getTime() : subscription.expirationTime) : null,
             keys: {
               auth: subscription.auth,
               p256dh: subscription.p256dh,
